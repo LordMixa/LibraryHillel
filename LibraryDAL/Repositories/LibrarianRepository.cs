@@ -1,0 +1,47 @@
+﻿using LibraryDAL.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LibraryDAL.Repositories
+{
+    public class LibrarianRepository : IRepository<Librarian>
+    {
+        public readonly DbSet<Librarian> _librarianSet;
+        public readonly UnitOfWork _unitOfWork;
+        public LibrarianRepository(UnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _librarianSet = _unitOfWork.Context.Set<Librarian>();
+        }
+        public async Task Create(Librarian item)
+        {
+            await _librarianSet.AddAsync(item);
+        }
+
+        public async Task Delete(int id)
+        {
+            Librarian book = await _librarianSet.FindAsync(id);
+            if (book != null)
+                _librarianSet.Remove(book);
+        }
+
+        public async Task<Librarian>? Get(int id)
+        {
+            return await _librarianSet.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<Librarian>> GetAll()
+        {
+            return await _librarianSet.ToListAsync();
+        }
+
+        public async Task Update(Librarian item)
+        {
+            _librarianSet.Update(item);
+        }
+    }
+}
