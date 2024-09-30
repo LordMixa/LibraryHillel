@@ -15,5 +15,9 @@ namespace LibraryDAL.Entities
         public string LastName { get; set; }
         public DocumentType TypeOfDocument{ get; set; }
         public string DocumentNumber { get; set; }
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName}";
+        }
     }
 }

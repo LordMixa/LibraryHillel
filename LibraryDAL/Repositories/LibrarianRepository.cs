@@ -24,9 +24,9 @@ namespace LibraryDAL.Repositories
 
         public async Task Delete(int id)
         {
-            Librarian book = await _librarianSet.FindAsync(id);
-            if (book != null)
-                _librarianSet.Remove(book);
+            Librarian librarian = await _librarianSet.FindAsync(id);
+            if (librarian != null)
+                _librarianSet.Remove(librarian);
         }
 
         public async Task<Librarian>? Get(int id)

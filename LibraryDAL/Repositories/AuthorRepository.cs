@@ -24,9 +24,9 @@ namespace LibraryDAL.Repositories
 
         public async Task Delete(int id)
         {
-            Author book = await _authorSet.FindAsync(id);
-            if (book != null)
-                _authorSet.Remove(book);
+            Author author = await _authorSet.FindAsync(id);
+            if (author != null)
+                _authorSet.Remove(author);
         }
 
         public async Task<Author>? Get(int id)

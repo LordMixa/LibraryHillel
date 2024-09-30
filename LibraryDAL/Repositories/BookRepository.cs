@@ -21,7 +21,10 @@ namespace LibraryDAL.Repositories
         {
             await _bookSet.AddAsync(item);
         }
-
+        public async Task<Book> GetByTitle(string title)
+        {
+            return await _bookSet.FirstAsync(x => x.Title == title);
+        }
         public async Task Delete(int id)
         {
             Book book = await _bookSet.FindAsync(id);

@@ -17,13 +17,21 @@ namespace LibraryHillelEF
             using (var unitOfWork = new UnitOfWork())
             {
                 var bookrepos = new BookRepository(unitOfWork);
-                await bookrepos.Create(new Book { Title = title, Authors = authors, 
-                    City = city, Country = country, 
-                    PublisherCode = PublisherCode, PublisherCodeType = publisherCodeType, 
-                    YearOfPublication = yearOfPublication });
-                await unitOfWork.SaveAsync();
+                if (bookrepos.GetByTitle(title) == null)
+                {
+                    await bookrepos.Create(new Book
+                    {
+                        Title = title,
+                        Authors = authors,
+                        City = city,
+                        Country = country,
+                        PublisherCode = PublisherCode,
+                        PublisherCodeType = publisherCodeType,
+                        YearOfPublication = yearOfPublication
+                    });
+                    await unitOfWork.SaveAsync();
+                }
             }
-            
         }
         public async Task UpdateBook(Book oldbook, Book newchanges)
         {
@@ -139,14 +147,26 @@ namespace LibraryHillelEF
                 await readerrepos.Delete(id);
             }
         }
-        public void GetHistoryTakenBook()
+        public async Task<List<string>> GetHistoryTakenBook()
         {
-
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var takenbookrepos = new TakenBookRepository(unitOfWork);
+                var list = await takenbookrepos.GetAll();
+                List<string> history = new List<string>();
+                foreach (var item in list)
+                    history.Add(item.ToString());
+                return history;
+            }
         }
-        public void GetDebtorList()
-        {
+        //public void GetDebtorList()
+        //{
+        //    using (var unitOfWork = new UnitOfWork())
+        //    {
+        //        var takenbookrepos = new TakenBookRepository(unitOfWork);
 
-        }
+        //    }
+        //}
         public void GetFullListReaderTaken()
         {
 

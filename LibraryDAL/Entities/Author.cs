@@ -13,6 +13,10 @@ namespace LibraryDAL.Entities
         public string LastName { get; set; }
         public string ?MiddleName { get; set; }
         public DateOnly ?Birthday { get; set; }
-        public List<Book> ?Books { get; set;  } 
+        public List<Book> ?Books { get; set;  }
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName} {MiddleName}";
+        }
     }
 }
