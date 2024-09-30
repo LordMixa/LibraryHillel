@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,10 @@ namespace LibraryDAL.Repositories
         {
             return await _takenBookSet.FindAsync(id);
         }
-
+        public async Task<IEnumerable<TakenBook>>? GetDebtorList()
+        {
+            return await _takenBookSet.Where(e => e.DayOfReturn == null && e.LastDayOfRent < DateOnly.FromDateTime(DateTime.Now)).ToListAsync();
+        }
         public async Task<IEnumerable<TakenBook>> GetAll()
         {
             return await _takenBookSet.ToListAsync();

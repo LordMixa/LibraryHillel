@@ -159,14 +159,14 @@ namespace LibraryHillelEF
                 return history;
             }
         }
-        //public void GetDebtorList()
-        //{
-        //    using (var unitOfWork = new UnitOfWork())
-        //    {
-        //        var takenbookrepos = new TakenBookRepository(unitOfWork);
-
-        //    }
-        //}
+        public async Task<IEnumerable<TakenBook>> GetDebtorList()
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var takenbookrepos = new TakenBookRepository(unitOfWork);
+                return takenbookrepos.GetDebtorList().Result;
+            }
+        }
         public void GetFullListReaderTaken()
         {
 
