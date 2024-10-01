@@ -23,7 +23,7 @@ namespace LibraryDAL.Repositories
         }
         public async Task<Book> GetByTitle(string title)
         {
-            return await _bookSet.FirstAsync(x => x.Title == title);
+            return await _bookSet.FirstOrDefaultAsync(x => x.Title == title);
         }
         public async Task Delete(int id)
         {

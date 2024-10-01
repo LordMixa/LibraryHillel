@@ -19,5 +19,17 @@ namespace LibraryDAL.Entities
         {
             return $"{FirstName} {LastName}";
         }
+        public string GetBookTakenToString()
+        {
+            string books = string.Join(", ", TakenBook
+                .Where(x => x.DayOfReturn == null)
+                .Select(x => x.Book.ToString()));
+            return $"{FirstName} {LastName}\nBooks: {books}";
+        }
+        public string GetHistoryOfTakenBookToString()
+        {
+            //string takenbooks = string.Join(", ", TakenBook.ToString());
+            return $"{string.Join(", ", TakenBook.ToString())}";
+        }
     }
 }

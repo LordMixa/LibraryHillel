@@ -17,5 +17,10 @@ namespace LibraryDAL.Entities
         public int ?YearOfPublication { get; set; }
         public string ?Country { get; set; }
         public string ?City { get; set; }
+        public override string ToString()
+        {
+            string authors = string.Join(", ", Authors.Select(x => x.ToString()));
+            return $"{Title}. Authors: {authors}";
+        }
     }
 }

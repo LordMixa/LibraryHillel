@@ -12,12 +12,36 @@ namespace LibraryHillelEF
 {
     public class LibrarianFuncs
     {
-        public async Task AddBook(string title, int? yearOfPublication, string? country, string? city, List<Author> authors, PublisherCodeType publisherCodeType, string PublisherCode)
+        public async Task<string> GetAllPublisherTypes()
         {
             using (var unitOfWork = new UnitOfWork())
             {
+                var publishrepos = new PublisherCodeTypeRepository(unitOfWork);
+                var publishcode = await publishrepos.GetAll();
+                string codes = string.Empty;
+                foreach (var code in publishcode) {
+                    codes += $"{code.PublisherCodeName}\n";
+                }
+                return codes;
+            }
+        }
+        public async Task AddBook(string title, int? yearOfPublication, string? country, string? city, List<int> authorsid, string publisherCodeTypebyname, string PublisherCode)
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var publishrepos = new PublisherCodeTypeRepository(unitOfWork);
+                var code = await publishrepos.GetByName(publisherCodeTypebyname);
+                var authrepos = new AuthorRepository(unitOfWork);
+                var authors = new List<Author>();
+                foreach (var item in authorsid)
+                {
+                    var author = await authrepos.Get(item);
+                    if (author != null)
+                        authors.Add(author);
+                }
                 var bookrepos = new BookRepository(unitOfWork);
-                if (bookrepos.GetByTitle(title) == null)
+
+                if (await bookrepos.GetByTitle(title) == null)
                 {
                     await bookrepos.Create(new Book
                     {
@@ -26,14 +50,36 @@ namespace LibraryHillelEF
                         City = city,
                         Country = country,
                         PublisherCode = PublisherCode,
-                        PublisherCodeType = publisherCodeType,
+                        PublisherCodeType = code,
                         YearOfPublication = yearOfPublication
                     });
                     await unitOfWork.SaveAsync();
                 }
             }
         }
-        public async Task UpdateBook(Book oldbook, Book newchanges)
+        public async Task UpdateBook(string bookname, string title, int? yearOfPublication, string? country, string? city, List<Author> authors, PublisherCodeType publisherCodeType, string PublisherCode)
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var bookrepos = new BookRepository(unitOfWork);
+                var book = bookrepos.GetByTitle(title).Result;
+                if (book == null)
+                {
+                    var newbook = new Book
+                    {
+                        Title = title,
+                        Authors = authors,
+                        City = city,
+                        Country = country,
+                        PublisherCode = PublisherCode,
+                        PublisherCodeType = publisherCodeType,
+                        YearOfPublication = yearOfPublication
+                    };
+                    UpdateBookDB(book, newbook);
+                }
+            }
+        }
+        private async Task UpdateBookDB(Book oldbook, Book newchanges)
         {
             using (var unitOfWork = new UnitOfWork())
             {
@@ -169,7 +215,12 @@ namespace LibraryHillelEF
         }
         public void GetFullListReaderTaken()
         {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var readerrepos = new ReaderRepository(unitOfWork);
 
+
+            }
         }
         public void GetFullListBookTaken()
         {

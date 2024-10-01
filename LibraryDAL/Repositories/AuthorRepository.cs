@@ -29,11 +29,14 @@ namespace LibraryDAL.Repositories
                 _authorSet.Remove(author);
         }
 
-        public async Task<Author>? Get(int id)
+        public async Task<Author> Get(int id)
         {
-            return await _authorSet.FindAsync(id);
+            return await _authorSet.FirstOrDefaultAsync(x => x.AuthorId == id);
         }
-
+        public async Task<Author>? GetByName(string fname, string sname)
+        {
+            return await _authorSet.FirstOrDefaultAsync(x => x.LastName == sname && x.FirstName == fname);
+        }
         public async Task<IEnumerable<Author>> GetAll()
         {
             return await _authorSet.ToListAsync();

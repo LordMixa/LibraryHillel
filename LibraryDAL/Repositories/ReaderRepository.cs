@@ -38,7 +38,10 @@ namespace LibraryDAL.Repositories
         {
             return await _readerSet.ToListAsync();
         }
-
+        public async Task<IEnumerable<Reader>> GetAllTakenBook()
+        {
+            return await _readerSet.Where(x => x.TakenBook != null).ToListAsync();
+        }
         public async Task Update(Reader item)
         {
             _readerSet.Update(item);

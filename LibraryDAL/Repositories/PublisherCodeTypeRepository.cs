@@ -28,8 +28,11 @@ namespace LibraryDAL.Repositories
             if (publishCodeType != null)
                 _documentTypeSet.Remove(publishCodeType);
         }
-
-        public async Task<PublisherCodeType>? Get(int id)
+        public async Task<PublisherCodeType?> GetByName(string name)
+        {
+            return await _documentTypeSet.FirstOrDefaultAsync(x => x.PublisherCodeName==name);
+        }
+        public async Task<PublisherCodeType?> Get(int id)
         {
             return await _documentTypeSet.FindAsync(id);
         }
