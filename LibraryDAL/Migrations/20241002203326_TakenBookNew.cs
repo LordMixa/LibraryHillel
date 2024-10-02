@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LibraryDAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class TakenBookNew : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,10 +17,10 @@ namespace LibraryDAL.Migrations
                 {
                     AuthorId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Birthday = table.Column<DateOnly>(type: "date", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Birthday = table.Column<DateOnly>(type: "date", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,10 +77,10 @@ namespace LibraryDAL.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TypeOfDocumentDocumentTypeId = table.Column<int>(type: "int", nullable: false),
-                    DocumentNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DocumentNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Login = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,10 +101,10 @@ namespace LibraryDAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublisherCodeTypeId = table.Column<int>(type: "int", nullable: false),
-                    PublisherCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    YearOfPublication = table.Column<int>(type: "int", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PublisherCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    YearOfPublication = table.Column<int>(type: "int", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -141,10 +141,51 @@ namespace LibraryDAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TakenBook",
+                columns: table => new
+                {
+                    TakenBookId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstDayOfRent = table.Column<DateOnly>(type: "date", nullable: false),
+                    ReaderId = table.Column<int>(type: "int", nullable: false),
+                    BookId = table.Column<int>(type: "int", nullable: false),
+                    LastDayOfRent = table.Column<DateOnly>(type: "date", nullable: false),
+                    DayOfReturn = table.Column<DateOnly>(type: "date", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TakenBook", x => x.TakenBookId);
+                    table.ForeignKey(
+                        name: "FK_TakenBook_Book_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Book",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TakenBook_Reader_ReaderId",
+                        column: x => x.ReaderId,
+                        principalTable: "Reader",
+                        principalColumn: "ReaderId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AuthorBook_BooksBookId",
                 table: "AuthorBook",
                 column: "BooksBookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Authors_FirstName_LastName",
+                table: "Authors",
+                columns: new[] { "FirstName", "LastName" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Book_PublisherCode",
+                table: "Book",
+                column: "PublisherCode",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Book_PublisherCodeTypeId",
@@ -152,9 +193,31 @@ namespace LibraryDAL.Migrations
                 column: "PublisherCodeTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reader_DocumentNumber",
+                table: "Reader",
+                column: "DocumentNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reader_Email",
+                table: "Reader",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reader_TypeOfDocumentDocumentTypeId",
                 table: "Reader",
                 column: "TypeOfDocumentDocumentTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TakenBook_BookId",
+                table: "TakenBook",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TakenBook_ReaderId",
+                table: "TakenBook",
+                column: "ReaderId");
         }
 
         /// <inheritdoc />
@@ -167,7 +230,7 @@ namespace LibraryDAL.Migrations
                 name: "Librarian");
 
             migrationBuilder.DropTable(
-                name: "Reader");
+                name: "TakenBook");
 
             migrationBuilder.DropTable(
                 name: "Authors");
@@ -176,10 +239,13 @@ namespace LibraryDAL.Migrations
                 name: "Book");
 
             migrationBuilder.DropTable(
-                name: "DocumentType");
+                name: "Reader");
 
             migrationBuilder.DropTable(
                 name: "PublisherCodeType");
+
+            migrationBuilder.DropTable(
+                name: "DocumentType");
         }
     }
 }

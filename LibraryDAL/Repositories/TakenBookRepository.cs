@@ -1,11 +1,5 @@
 ﻿using LibraryDAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryDAL.Repositories
 {
@@ -25,25 +19,35 @@ namespace LibraryDAL.Repositories
 
         public async Task Delete(int id)
         {
-            TakenBook takenBook = await _takenBookSet.FindAsync(id);
+            TakenBook? takenBook = await _takenBookSet.FindAsync(id);
             if (takenBook != null)
                 _takenBookSet.Remove(takenBook);
         }
 
-        public async Task<TakenBook>? Get(int id)
+        public async Task<TakenBook?> Get(int id)
         {
             return await _takenBookSet.FindAsync(id);
         }
+        public async Task<TakenBook?> GetByTitle(string title)
+        {
+            return await _takenBookSet.FirstOrDefaultAsync(x => x.Book.Title == title);
+        }
         public async Task<IEnumerable<TakenBook>>? GetDebtorList()
         {
-            return await _takenBookSet.Where(e => e.DayOfReturn == null && e.LastDayOfRent < DateOnly.FromDateTime(DateTime.Now)).ToListAsync();
+            return await _takenBookSet
+                .Include(tb => tb.Book)
+                .Include(tb => tb.Reader)
+                .Where(e => e.DayOfReturn == null && e.LastDayOfRent < DateOnly.FromDateTime(DateTime.Now))
+                .ToListAsync();
         }
         public async Task<IEnumerable<TakenBook>> GetAll()
         {
-            return await _takenBookSet.ToListAsync();
+            return await _takenBookSet
+                .Include(tb => tb.Book)
+                .Include(tb => tb.Reader).ToListAsync();
         }
 
-        public async Task Update(TakenBook item)
+        public void Update(TakenBook item)
         {
             _takenBookSet.Update(item);
         }

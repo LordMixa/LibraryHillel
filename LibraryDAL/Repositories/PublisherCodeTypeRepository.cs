@@ -1,50 +1,45 @@
 ﻿using LibraryDAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryDAL.Repositories
 {
     public class PublisherCodeTypeRepository : IRepository<PublisherCodeType>
     {
-        public readonly DbSet<PublisherCodeType> _documentTypeSet;
+        public readonly DbSet<PublisherCodeType> _publishCodeTypeSet;
         public readonly UnitOfWork _unitOfWork;
         public PublisherCodeTypeRepository(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _documentTypeSet = _unitOfWork.Context.Set<PublisherCodeType>();
+            _publishCodeTypeSet = _unitOfWork.Context.Set<PublisherCodeType>();
         }
         public async Task Create(PublisherCodeType item)
         {
-            await _documentTypeSet.AddAsync(item);
+            await _publishCodeTypeSet.AddAsync(item);
         }
 
         public async Task Delete(int id)
         {
-            PublisherCodeType publishCodeType = await _documentTypeSet.FindAsync(id);
+            PublisherCodeType? publishCodeType = await _publishCodeTypeSet.FindAsync(id);
             if (publishCodeType != null)
-                _documentTypeSet.Remove(publishCodeType);
+                _publishCodeTypeSet.Remove(publishCodeType);
         }
         public async Task<PublisherCodeType?> GetByName(string name)
         {
-            return await _documentTypeSet.FirstOrDefaultAsync(x => x.PublisherCodeName==name);
+            return await _publishCodeTypeSet.FirstOrDefaultAsync(x => x.PublisherCodeName==name);
         }
         public async Task<PublisherCodeType?> Get(int id)
         {
-            return await _documentTypeSet.FindAsync(id);
+            return await _publishCodeTypeSet.FindAsync(id);
         }
 
         public async Task<IEnumerable<PublisherCodeType>> GetAll()
         {
-            return await _documentTypeSet.ToListAsync();
+            return await _publishCodeTypeSet.ToListAsync();
         }
 
-        public async Task Update(PublisherCodeType item)
+        public void Update(PublisherCodeType item)
         {
-            _documentTypeSet.Update(item);
+            _publishCodeTypeSet.Update(item);
         }
     }
 }

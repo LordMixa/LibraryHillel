@@ -1,10 +1,5 @@
 ﻿using LibraryDAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryDAL.Repositories
 {
@@ -24,16 +19,24 @@ namespace LibraryDAL.Repositories
 
         public async Task Delete(int id)
         {
-            Reader reader = await _readerSet.FindAsync(id);
+            Reader? reader = await _readerSet.FindAsync(id);
             if (reader != null)
                 _readerSet.Remove(reader);
         }
-
-        public async Task<Reader>? Get(int id)
+        public async Task DeleteByDocument(string doc)
         {
-            return await _readerSet.FindAsync(id);
+            Reader? reader = await _readerSet.FirstOrDefaultAsync(e => e.DocumentNumber == doc);
+            if (reader != null)
+                _readerSet.Remove(reader);
         }
-
+        public async Task<Reader?> Get(int id)
+        {
+            return await _readerSet.FirstOrDefaultAsync(e => e.ReaderId==id);
+        }
+        public async Task<Reader?> GetByName(string fname, string lname)
+        {
+            return await _readerSet.FirstOrDefaultAsync(x => x.LastName == lname && x.FirstName == fname);
+        }
         public async Task<IEnumerable<Reader>> GetAll()
         {
             return await _readerSet.ToListAsync();
@@ -42,7 +45,7 @@ namespace LibraryDAL.Repositories
         {
             return await _readerSet.Where(x => x.TakenBook != null).ToListAsync();
         }
-        public async Task Update(Reader item)
+        public void Update(Reader item)
         {
             _readerSet.Update(item);
         }

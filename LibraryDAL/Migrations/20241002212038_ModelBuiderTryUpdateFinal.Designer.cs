@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryDAL.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20240928184222_NullChanges")]
-    partial class NullChanges
+    [Migration("20241002212038_ModelBuiderTryUpdateFinal")]
+    partial class ModelBuiderTryUpdateFinal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,16 +53,19 @@ namespace LibraryDAL.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AuthorId");
+
+                    b.HasIndex("FirstName", "LastName")
+                        .IsUnique();
 
                     b.ToTable("Authors");
                 });
@@ -83,7 +86,7 @@ namespace LibraryDAL.Migrations
 
                     b.Property<string>("PublisherCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("PublisherCodeTypeId")
                         .HasColumnType("int");
@@ -96,6 +99,9 @@ namespace LibraryDAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("BookId");
+
+                    b.HasIndex("PublisherCode")
+                        .IsUnique();
 
                     b.HasIndex("PublisherCodeTypeId");
 
@@ -171,11 +177,11 @@ namespace LibraryDAL.Migrations
 
                     b.Property<string>("DocumentNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -198,9 +204,47 @@ namespace LibraryDAL.Migrations
 
                     b.HasKey("ReaderId");
 
+                    b.HasIndex("DocumentNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("TypeOfDocumentDocumentTypeId");
 
                     b.ToTable("Reader");
+                });
+
+            modelBuilder.Entity("LibraryDAL.Entities.TakenBook", b =>
+                {
+                    b.Property<int>("TakenBookId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TakenBookId"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("DayOfReturn")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FirstDayOfRent")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("LastDayOfRent")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ReaderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TakenBookId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("ReaderId");
+
+                    b.ToTable("TakenBook");
                 });
 
             modelBuilder.Entity("AuthorBook", b =>
@@ -238,6 +282,35 @@ namespace LibraryDAL.Migrations
                         .IsRequired();
 
                     b.Navigation("TypeOfDocument");
+                });
+
+            modelBuilder.Entity("LibraryDAL.Entities.TakenBook", b =>
+                {
+                    b.HasOne("LibraryDAL.Entities.Book", "Book")
+                        .WithMany("TakenBook")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LibraryDAL.Entities.Reader", "Reader")
+                        .WithMany("TakenBook")
+                        .HasForeignKey("ReaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Reader");
+                });
+
+            modelBuilder.Entity("LibraryDAL.Entities.Book", b =>
+                {
+                    b.Navigation("TakenBook");
+                });
+
+            modelBuilder.Entity("LibraryDAL.Entities.Reader", b =>
+                {
+                    b.Navigation("TakenBook");
                 });
 #pragma warning restore 612, 618
         }

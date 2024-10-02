@@ -1,10 +1,5 @@
 ﻿using LibraryDAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryDAL.Repositories
 {
@@ -24,22 +19,25 @@ namespace LibraryDAL.Repositories
 
         public async Task Delete(int id)
         {
-            DocumentType documentType = await _documentTypeSet.FindAsync(id);
+            DocumentType? documentType = await _documentTypeSet.FindAsync(id);
             if (documentType != null)
                 _documentTypeSet.Remove(documentType);
         }
 
-        public async Task<DocumentType>? Get(int id)
+        public async Task<DocumentType?> Get(int id)
         {
             return await _documentTypeSet.FindAsync(id);
         }
-
+        public async Task<DocumentType?> GetByName(string name)
+        {
+            return await _documentTypeSet.FirstOrDefaultAsync(x => x.DocumentTypeName == name);
+        }
         public async Task<IEnumerable<DocumentType>> GetAll()
         {
             return await _documentTypeSet.ToListAsync();
         }
 
-        public async Task Update(DocumentType item)
+        public void Update(DocumentType item)
         {
             _documentTypeSet.Update(item);
         }

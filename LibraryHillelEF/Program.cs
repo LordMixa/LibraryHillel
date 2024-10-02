@@ -1,6 +1,7 @@
 ﻿using LibraryDAL;
 using LibraryDAL.Entities;
 using LibraryDAL.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryHillelEF
 {
@@ -10,8 +11,16 @@ namespace LibraryHillelEF
         {
             LibraryContext context = new LibraryContext();
             LibrarianFuncs librarianFuncs = new LibrarianFuncs();
-            var strings = librarianFuncs.GetAllPublisherTypes().Result;
-            await librarianFuncs.AddBook("Book", 2004, null, null, new List<int> { 1 }, "ISBN", "123123123");
+            //await librarianFuncs.AddAuthor("Albert", "Einstein", "Genius", new DateOnly(1900, 1, 1), null);
+            //await librarianFuncs.UpdateAuthor("Albert", "Einstein", "John", "Whick", null, null, null);
+            //await librarianFuncs.AddBook("Book", 2004, null, null, new List<int> { 1 }, "ISBN", "123123123");
+            //await librarianFuncs.AddReader("Michael", "Jordan", "Passport", "a1w1w1w1", "olololo", "hohohoho", "asd@gmail.com");
+            //await librarianFuncs.UpdateReader("Michael", "Jordan", null, null, null, null, null, null, "update@gmail.com");
+            //await librarianFuncs.DeleteReader("a1w1w1w1");
+            Console.WriteLine(await librarianFuncs.GetDebtorList());
+
+
+            //var strings = librarianFuncs.GetAllPublisherTypes().Result;
             //using (var unitOfWork = new UnitOfWork())
             //{
             //    var reposread = new ReaderRepository(unitOfWork);
@@ -57,13 +66,16 @@ namespace LibraryHillelEF
             //    var reposread = new ReaderRepository(unitOfWork);
             //    var repos = new TakenBookRepository(unitOfWork);
             //    var reposbook = new BookRepository(unitOfWork);
-            //    var book = reposbook.Get(5).Result;
+            //    var book = await reposbook.Get(1);
 
-            //    var read = reposread.Get(1).Result;
-            //    repos.Create(new TakenBook { DayOfReturn = new DateOnly(2024,06,21), FirstDayOfRent= new DateOnly(2024, 03, 20), LastDayOfRent = new DateOnly(2024, 09, 20), Book=book, Reader = read });
+            //    var read = await reposread.Get(13);
+            //    //Console.WriteLine(unitOfWork.Context.Entry(read).State);
+
+            //    await repos.Create(new TakenBook { DayOfReturn = null, FirstDayOfRent = new DateOnly(2024, 03, 20), 
+            //        LastDayOfRent = new DateOnly(2024, 09, 20), Book = book, Reader = read });
             //    unitOfWork.Save();
             //}
-            //context.DocumentType.Add(new DocumentType { DocumentTypeName = "Driver license" });
+            //context.DocumentType.Add(new DocumentType { DocumentTypeName = "Passport" });
             //context.DocumentType.Add(new DocumentType { DocumentTypeName = "Student ticket" });
             //context.PublisherCodeType.Add(new PublisherCodeType { PublisherCodeName = "ISBN" });
             //context.PublisherCodeType.Add(new PublisherCodeType { PublisherCodeName = "BBK" });

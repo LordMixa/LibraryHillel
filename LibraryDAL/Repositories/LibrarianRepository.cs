@@ -1,10 +1,5 @@
 ﻿using LibraryDAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryDAL.Repositories
 {
@@ -24,12 +19,12 @@ namespace LibraryDAL.Repositories
 
         public async Task Delete(int id)
         {
-            Librarian librarian = await _librarianSet.FindAsync(id);
+            Librarian? librarian = await _librarianSet.FindAsync(id);
             if (librarian != null)
                 _librarianSet.Remove(librarian);
         }
 
-        public async Task<Librarian>? Get(int id)
+        public async Task<Librarian?> Get(int id)
         {
             return await _librarianSet.FindAsync(id);
         }
@@ -39,7 +34,7 @@ namespace LibraryDAL.Repositories
             return await _librarianSet.ToListAsync();
         }
 
-        public async Task Update(Librarian item)
+        public void Update(Librarian item)
         {
             _librarianSet.Update(item);
         }

@@ -1,6 +1,5 @@
 ﻿using LibraryDAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace LibraryDAL
 {
@@ -17,20 +16,23 @@ namespace LibraryDAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=LibraryHillel;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=LibraryHillelDB;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>()
                 .HasMany(e => e.Books)
                 .WithMany(e => e.Authors);
+            modelBuilder.Entity<Author>()
+                .HasIndex(a => new { a.FirstName, a.LastName })
+                .IsUnique();
             modelBuilder.Entity<Book>()
                 .HasOne(e => e.PublisherCodeType)
                 .WithMany();
-            modelBuilder.Entity<Book>()
-                .HasOne(e => e.TakenBook)
-                .WithOne(e => e.Book)
-                .HasForeignKey<TakenBook>();
+            modelBuilder.Entity<TakenBook>()
+                .HasOne(e => e.Book)
+                .WithMany(e => e.TakenBook)
+                .HasForeignKey(tb => tb.BookId);
             modelBuilder.Entity<Reader>()
                 .HasOne(e => e.TypeOfDocument)
                 .WithMany();
@@ -45,7 +47,8 @@ namespace LibraryDAL
               .IsUnique();
             modelBuilder.Entity<Reader>()
                 .HasMany(e => e.TakenBook)
-                .WithOne(e => e.Reader);
+                .WithOne(e => e.Reader)
+                .HasForeignKey(e => e.ReaderId);
         }
     }
 }

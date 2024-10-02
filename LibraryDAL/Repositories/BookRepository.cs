@@ -1,10 +1,5 @@
 ﻿using LibraryDAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LibraryDAL.Repositories
 {
@@ -21,18 +16,18 @@ namespace LibraryDAL.Repositories
         {
             await _bookSet.AddAsync(item);
         }
-        public async Task<Book> GetByTitle(string title)
+        public async Task<Book?> GetByTitle(string title)
         {
             return await _bookSet.FirstOrDefaultAsync(x => x.Title == title);
         }
         public async Task Delete(int id)
         {
-            Book book = await _bookSet.FindAsync(id);
+            Book? book = await _bookSet.FindAsync(id);
             if (book != null)
                 _bookSet.Remove(book);
         }
 
-        public async Task<Book>? Get(int id)
+        public async Task<Book?> Get(int id)
         {
             return await _bookSet.FindAsync(id);
         }
@@ -42,7 +37,7 @@ namespace LibraryDAL.Repositories
             return await _bookSet.ToListAsync();
         }
 
-        public async Task Update(Book item)
+        public void Update(Book item)
         {
             _bookSet.Update(item);
         }
