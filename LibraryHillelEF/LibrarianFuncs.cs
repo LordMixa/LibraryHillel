@@ -6,7 +6,7 @@ namespace LibraryHillelEF
 {
     public class LibrarianFuncs : AddReader
     {
-        public async Task AddBook(string title, int? yearOfPublication, string? country, string? city, 
+        public async Task AddBook(string title, int? yearOfPublication, string? country, string? city,
             List<int> authorsid, string publisherCodeTypebyname, string PublisherCode)
         {
             using (var unitOfWork = new UnitOfWork())
@@ -17,7 +17,7 @@ namespace LibraryHillelEF
                 {
                     var authrepos = new AuthorRepository(unitOfWork);
                     var authors = new List<Author>();
-                    if (authorsid != null)
+                    if (authorsid.Count != 0)
                     {
                         foreach (var item in authorsid)
                         {
@@ -45,7 +45,7 @@ namespace LibraryHillelEF
                 }
             }
         }
-        public async Task UpdateBook(string bookname, string title, int? yearOfPublication, string? country, 
+        public async Task UpdateBook(string bookname, string title, int? yearOfPublication, string? country,
             string? city, List<Author> authors, string publisherCodeType, string publisherCode)
         {
             using (var unitOfWork = new UnitOfWork())
@@ -62,7 +62,7 @@ namespace LibraryHillelEF
                     {
                         var publishrepos = new PublisherCodeTypeRepository(unitOfWork);
                         var code = await publishrepos.GetByName(publisherCodeType);
-                        if(code != null) 
+                        if (code != null)
                             book.PublisherCodeType = code;
                     }
                     if (publisherCode != null)
@@ -78,7 +78,7 @@ namespace LibraryHillelEF
                 }
             }
         }
-        public async Task AddAuthor(string firstName, string lastName, string? middleName, 
+        public async Task AddAuthor(string firstName, string lastName, string? middleName,
             DateOnly? birthday, List<string>? booksTitle)
         {
             using (var unitOfWork = new UnitOfWork())
@@ -106,7 +106,7 @@ namespace LibraryHillelEF
                 await unitOfWork.SaveAsync();
             }
         }
-        public async Task UpdateAuthor(string fname, string lname, string firstName, 
+        public async Task UpdateAuthor(string fname, string lname, string firstName,
             string lastName, string? middleName, DateOnly? birthday, List<string>? booksTitle)
         {
             using (var unitOfWork = new UnitOfWork())
@@ -143,7 +143,7 @@ namespace LibraryHillelEF
                 }
             }
         }
-        public async Task UpdateReader(string fname, string lname, string firstName, string lastName, 
+        public async Task UpdateReader(string fname, string lname, string firstName, string lastName,
             string typeOfDocument, string documentNumber, string login, string password, string email)
         {
             using (var unitOfWork = new UnitOfWork())
@@ -217,7 +217,7 @@ namespace LibraryHillelEF
                 var readerrepos = new ReaderRepository(unitOfWork);
                 var reader = await readerrepos.GetAllTakenBookByReader(fname, lname);
                 if (reader != null)
-                    return $"Reader history of {fname} {lname}:\n{reader.GetHistoryOfTakenBookToString()}"; 
+                    return $"Reader history of {fname} {lname}:\n{reader.GetHistoryOfTakenBookToString()}";
                 else
                     return "Reader not found";
             }

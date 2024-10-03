@@ -12,5 +12,10 @@
         {
             return $"{FirstName} {LastName} {MiddleName}";
         }
+        public string GetInfo()
+        {
+            string books = string.Join(", ", Books?.Select(x => x.Title) ?? new List<string>());
+            return $"{FirstName} {LastName} {MiddleName}, Birthday: {Birthday}, Books: {books}";
+        }
     }
 }

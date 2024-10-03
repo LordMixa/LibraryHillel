@@ -11,12 +11,14 @@ namespace LibraryHillelEF
         {
             LibraryContext context = new LibraryContext();
             LibrarianFuncs librarianFuncs = new LibrarianFuncs();
-            ReaderFunc readerFuncs = new ReaderFunc();
-            Console.WriteLine(await readerFuncs.GetAllBooksFree());
+            ReaderFunc readerFuncs = new ReaderFunc("Michael", "Jordan");
+            await readerFuncs.ReturnBook("111111");
+            //Console.WriteLine(await librarianFuncs.GetReaderHistory("Michael", "Jordan"));
+            //Console.WriteLine(await readerFuncs.GetInfoAuthor("John", "Whick"));
             //await librarianFuncs.UpdateTakenBookPeroid(new DateOnly(2025, 05, 05), "123123123");
             //await librarianFuncs.AddAuthor("Albert", "Einstein", "Genius", new DateOnly(1900, 1, 1), null);
             //await librarianFuncs.UpdateAuthor("Albert", "Einstein", "John", "Whick", null, null, null);
-            //await librarianFuncs.AddBook("Book", 2004, null, null, new List<int> { 1 }, "ISBN", "123123123");
+            //await librarianFuncs.AddBook("Witcher", 1995, "Poland", null, new List<int> { }, "ISBN", "111111");
             //await librarianFuncs.AddReader("Michael", "Jordan", "Passport", "a1w1w1w1", "olololo", "hohohoho", "asd@gmail.com");
             //await librarianFuncs.UpdateReader("Michael", "Jordan", null, null, null, null, null, null, "update@gmail.com");
             //await librarianFuncs.DeleteReader("a1w1w1w1");

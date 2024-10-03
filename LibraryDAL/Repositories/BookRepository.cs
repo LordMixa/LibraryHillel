@@ -40,9 +40,28 @@ namespace LibraryDAL.Repositories
         {
             return await _bookSet.Include(e => e.TakenBook)
                 .Include(e => e.Authors)
-                .Where(e => e.TakenBook != null && e.TakenBook
-                .Any(tb => tb.DayOfReturn != null))
+                .Where(e => e.TakenBook == null || e.TakenBook.All(tb => tb.DayOfReturn != null))
                 .ToListAsync();
+        }
+        public async Task<Book?> GetFreeByTitle(string title)
+        {
+            return await _bookSet.Include(e => e.TakenBook)
+                .Include(e => e.Authors)
+                .Where(e => e.TakenBook == null || e.TakenBook.All(tb => tb.DayOfReturn != null))
+                .FirstOrDefaultAsync(x => x.Title == title);
+        }
+        public async Task<List<Book>> GetFreeByAuthor(string fname, string lname)
+        {
+            return await _bookSet
+                .Include(e => e.TakenBook)
+                .Include(e => e.Authors)
+                .Where(e => (e.TakenBook == null || e.TakenBook.All(tb => tb.DayOfReturn != null))
+                        && (e.Authors != null && e.Authors.Any(a => a.FirstName == fname && a.LastName == lname)))
+                .ToListAsync();
+        }
+        public async Task<Book?> GetByPublishCode(string code)
+        {
+            return await _bookSet.Include(e => e.TakenBook).FirstOrDefaultAsync(x => x.PublisherCode == code);
         }
         public void Update(Book item)
         {

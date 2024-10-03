@@ -30,7 +30,9 @@ namespace LibraryDAL.Repositories
         }
         public async Task<Author?> GetByName(string fname, string lname)
         {
-            return await _authorSet.FirstOrDefaultAsync(x => x.LastName == lname && x.FirstName == fname);
+            return await _authorSet
+                .Include(e=>e.Books)
+                .FirstOrDefaultAsync(x => x.LastName == lname && x.FirstName == fname);
         }
         public async Task<IEnumerable<Author>> GetAll()
         {

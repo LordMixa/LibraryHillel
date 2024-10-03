@@ -16,5 +16,11 @@
             string authors = string.Join(", ", Authors?.Select(x => x.ToString()) ?? new List<string>());
             return $"{Title}. Authors: {authors}";
         }
+        public bool IsFree()
+        {
+            if (TakenBook == null || !TakenBook.Any())
+                return true;
+            return TakenBook.All(tb => tb.DayOfReturn != null);
+        }
     }
 }
