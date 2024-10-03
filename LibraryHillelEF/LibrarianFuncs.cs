@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LibraryHillelEF
 {
-    public class LibrarianFuncs
+    public class LibrarianFuncs : AddReader
     {
         public async Task AddBook(string title, int? yearOfPublication, string? country, string? city, 
             List<int> authorsid, string publisherCodeTypebyname, string PublisherCode)
@@ -143,30 +143,6 @@ namespace LibraryHillelEF
                 }
             }
         }
-        public async Task AddReader(string firstName, string lastName, 
-            string typeOfDocument, string documentNumber, string login, string password, string email)
-        {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                var docnumtyperepos = new DocumentTypeRepository(unitOfWork);
-                var readerrepos = new ReaderRepository(unitOfWork);
-                var docnumtype = await docnumtyperepos.GetByName(typeOfDocument);
-                if (docnumtype != null)
-                {                    
-                    await readerrepos.Create(new Reader
-                    {
-                        FirstName = firstName,
-                        LastName = lastName,
-                        TypeOfDocument = docnumtype,
-                        DocumentNumber = documentNumber,
-                        Email = email,
-                        Password = password,
-                        Login = login
-                    });
-                    await unitOfWork.SaveAsync();
-                }
-            }
-        }
         public async Task UpdateReader(string fname, string lname, string firstName, string lastName, 
             string typeOfDocument, string documentNumber, string login, string password, string email)
         {
@@ -210,19 +186,6 @@ namespace LibraryHillelEF
                 await unitOfWork.SaveAsync();
             }
         }
-        //public async Task<string> GetHistoryTakenBook()
-        //{
-        //    using (var unitOfWork = new UnitOfWork())
-        //    {
-        //        var bookrepos = new BookRepository(unitOfWork);
-        //        var takenbookrepos = new TakenBookRepository(unitOfWork);
-        //        var list = await takenbookrepos.GetAll();
-        //        string history=string.Empty;
-        //        foreach (var item in list)
-        //            history += item.ToString() + '\n';
-        //        return history;
-        //    }
-        //}
         public async Task<string> GetDebtorList()
         {
             using (var unitOfWork = new UnitOfWork())
@@ -269,6 +232,20 @@ namespace LibraryHillelEF
                 foreach (var item in readerlist)
                     readers += item.ToString() + '\n';
                 return readers;
+            }
+        }
+        public async Task UpdateTakenBookPeroid(DateOnly date, string bookPublishCode)
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var takenbookrepos = new TakenBookRepository(unitOfWork);
+                var book = await takenbookrepos.GetByPublishCode(bookPublishCode);
+                if (book != null)
+                {
+                    book.LastDayOfRent = date;
+                    takenbookrepos.Update(book);
+                    await unitOfWork.SaveAsync();
+                }
             }
         }
     }

@@ -28,9 +28,9 @@ namespace LibraryDAL.Repositories
         {
             return await _takenBookSet.FindAsync(id);
         }
-        public async Task<TakenBook?> GetByTitle(string title)
+        public async Task<TakenBook?> GetByPublishCode(string code)
         {
-            return await _takenBookSet.FirstOrDefaultAsync(x => x.Book.Title == title);
+            return await _takenBookSet.FirstOrDefaultAsync(x => x.Book.PublisherCode == code);
         }
         public async Task<IEnumerable<TakenBook>>? GetDebtorList()
         {

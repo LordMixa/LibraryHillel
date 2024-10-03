@@ -36,7 +36,14 @@ namespace LibraryDAL.Repositories
         {
             return await _bookSet.ToListAsync();
         }
-
+        public async Task<IEnumerable<Book>> GetAllFree()
+        {
+            return await _bookSet.Include(e => e.TakenBook)
+                .Include(e => e.Authors)
+                .Where(e => e.TakenBook != null && e.TakenBook
+                .Any(tb => tb.DayOfReturn != null))
+                .ToListAsync();
+        }
         public void Update(Book item)
         {
             _bookSet.Update(item);

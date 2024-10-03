@@ -3,7 +3,7 @@ using LibraryDAL.Repositories;
 
 namespace LibraryHillelEF
 {
-    internal class LoginRegister
+    internal class LoginRegister : AddReader
     {
         public string LoginUser(string login, string password)
         {
@@ -31,6 +31,21 @@ namespace LibraryHillelEF
                         return "error";
                 }
                 else return "error";
+            }
+        }
+
+        public async Task AddNewLibrarian(string login, string password, string email)
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var reposlib = new LibrarianRepository(unitOfWork);
+                await reposlib.Create(new Librarian
+                {
+                    Email = email,
+                    Password = password,
+                    Login = login
+                });
+                await unitOfWork.SaveAsync();
             }
         }
     }

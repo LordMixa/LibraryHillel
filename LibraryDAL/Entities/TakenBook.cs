@@ -12,7 +12,7 @@
         public required DateOnly LastDayOfRent
         {
             get => _lastDayOfRent;
-            init => _lastDayOfRent = value != default ? value : FirstDayOfRent.AddDays(30);
+            set => _lastDayOfRent = value != default ? value : FirstDayOfRent.AddDays(30);
         }
         public DateOnly? DayOfReturn { get; set; }
         public override string ToString()

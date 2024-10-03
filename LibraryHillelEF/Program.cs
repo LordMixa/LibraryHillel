@@ -11,6 +11,9 @@ namespace LibraryHillelEF
         {
             LibraryContext context = new LibraryContext();
             LibrarianFuncs librarianFuncs = new LibrarianFuncs();
+            ReaderFunc readerFuncs = new ReaderFunc();
+            Console.WriteLine(await readerFuncs.GetAllBooksFree());
+            //await librarianFuncs.UpdateTakenBookPeroid(new DateOnly(2025, 05, 05), "123123123");
             //await librarianFuncs.AddAuthor("Albert", "Einstein", "Genius", new DateOnly(1900, 1, 1), null);
             //await librarianFuncs.UpdateAuthor("Albert", "Einstein", "John", "Whick", null, null, null);
             //await librarianFuncs.AddBook("Book", 2004, null, null, new List<int> { 1 }, "ISBN", "123123123");
@@ -79,24 +82,25 @@ namespace LibraryHillelEF
             //    });
             //    unitOfWork.Save();
             //}
-            using (var unitOfWork = new UnitOfWork())
-            {
-                var reposread = new ReaderRepository(unitOfWork);
-                var repos = new TakenBookRepository(unitOfWork);
-                var reposbook = new BookRepository(unitOfWork);
-                var book = await reposbook.Get(1);
+            //using (var unitOfWork = new UnitOfWork())
+            //{
+            //    var reposread = new ReaderRepository(unitOfWork);
+            //    var repos = new TakenBookRepository(unitOfWork);
+            //    var reposbook = new BookRepository(unitOfWork);
+            //    var book = await reposbook.Get(1);
 
-                var read = await reposread.Get(13);
-                await repos.Create(new TakenBook
-                {
-                    DayOfReturn = null,
-                    FirstDayOfRent = new DateOnly(2024, 03, 20),
-                    LastDayOfRent = new DateOnly(2024, 07, 20),
-                    Book = book,
-                    Reader = read
-                });
-                unitOfWork.Save();
-            }
+            //    var read = await reposread.Get(13);
+            //    await repos.Create(new TakenBook
+            //    {
+            //        DayOfReturn = null,
+            //        FirstDayOfRent = new DateOnly(2024, 01, 01),
+            //        LastDayOfRent = default,
+            //        Book = book,
+            //        Reader = read
+            //    });
+            //    unitOfWork.Save();
+            //}
+
             //context.DocumentType.Add(new DocumentType { DocumentTypeName = "Passport" });
             //context.DocumentType.Add(new DocumentType { DocumentTypeName = "Student ticket" });
             //context.PublisherCodeType.Add(new PublisherCodeType { PublisherCodeName = "ISBN" });
