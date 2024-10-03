@@ -210,47 +210,66 @@ namespace LibraryHillelEF
                 await unitOfWork.SaveAsync();
             }
         }
-        public async Task<string> GetHistoryTakenBook()
-        {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                var bookrepos = new BookRepository(unitOfWork);
-                var takenbookrepos = new TakenBookRepository(unitOfWork);
-                var list = await takenbookrepos.GetAll();
-                string history=string.Empty;
-                foreach (var item in list)
-                    history += item.ToString() + '\n';
-                return history;
-            }
-        }
+        //public async Task<string> GetHistoryTakenBook()
+        //{
+        //    using (var unitOfWork = new UnitOfWork())
+        //    {
+        //        var bookrepos = new BookRepository(unitOfWork);
+        //        var takenbookrepos = new TakenBookRepository(unitOfWork);
+        //        var list = await takenbookrepos.GetAll();
+        //        string history=string.Empty;
+        //        foreach (var item in list)
+        //            history += item.ToString() + '\n';
+        //        return history;
+        //    }
+        //}
         public async Task<string> GetDebtorList()
         {
             using (var unitOfWork = new UnitOfWork())
             {
                 var takenbookrepos = new TakenBookRepository(unitOfWork);
                 var list = await takenbookrepos.GetDebtorList()!;
-                string history = string.Empty;
+                string history = "List of debtor:\n";
                 foreach (var item in list)
                     history += item.ToString() + '\n';
                 return history;
             }
         }
-        public void GetFullListReaderTaken()
+        public async Task<string> GetFullListReaderTaken()
         {
             using (var unitOfWork = new UnitOfWork())
             {
                 var readerrepos = new ReaderRepository(unitOfWork);
-
-
+                var list = await readerrepos.GetAllTakenBook();
+                string history = "Full list of taken book:\n";
+                foreach (var item in list)
+                    history += item.GetBookTakenToString() + '\n';
+                return history;
             }
         }
-        public void GetFullListBookTaken()
+        public async Task<string> GetReaderHistory(string fname, string lname)
         {
-
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var readerrepos = new ReaderRepository(unitOfWork);
+                var reader = await readerrepos.GetAllTakenBookByReader(fname, lname);
+                if (reader != null)
+                    return $"Reader history of {fname} {lname}:\n{reader.GetHistoryOfTakenBookToString()}"; 
+                else
+                    return "Reader not found";
+            }
         }
-        public void GetReaderHistory()
+        public async Task<string> GetReaderInfo()
         {
-
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var readerrepos = new ReaderRepository(unitOfWork);
+                var readerlist = await readerrepos.GetAll();
+                string readers = "All readers info:\n";
+                foreach (var item in readerlist)
+                    readers += item.ToString() + '\n';
+                return readers;
+            }
         }
     }
 }

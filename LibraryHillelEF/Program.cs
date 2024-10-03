@@ -17,7 +17,7 @@ namespace LibraryHillelEF
             //await librarianFuncs.AddReader("Michael", "Jordan", "Passport", "a1w1w1w1", "olololo", "hohohoho", "asd@gmail.com");
             //await librarianFuncs.UpdateReader("Michael", "Jordan", null, null, null, null, null, null, "update@gmail.com");
             //await librarianFuncs.DeleteReader("a1w1w1w1");
-            Console.WriteLine(await librarianFuncs.GetDebtorList());
+            //Console.WriteLine(await librarianFuncs.GetReaderHistory("Michael", "Jordan"));
 
 
             //var strings = librarianFuncs.GetAllPublisherTypes().Result;
@@ -69,12 +69,34 @@ namespace LibraryHillelEF
             //    var book = await reposbook.Get(1);
 
             //    var read = await reposread.Get(13);
-            //    //Console.WriteLine(unitOfWork.Context.Entry(read).State);
-
-            //    await repos.Create(new TakenBook { DayOfReturn = null, FirstDayOfRent = new DateOnly(2024, 03, 20), 
-            //        LastDayOfRent = new DateOnly(2024, 09, 20), Book = book, Reader = read });
+            //    await repos.Create(new TakenBook
+            //    {
+            //        DayOfReturn = null,
+            //        FirstDayOfRent = new DateOnly(2024, 03, 20),
+            //        LastDayOfRent = new DateOnly(2024, 09, 25),
+            //        Book = book,
+            //        Reader = read
+            //    });
             //    unitOfWork.Save();
             //}
+            using (var unitOfWork = new UnitOfWork())
+            {
+                var reposread = new ReaderRepository(unitOfWork);
+                var repos = new TakenBookRepository(unitOfWork);
+                var reposbook = new BookRepository(unitOfWork);
+                var book = await reposbook.Get(1);
+
+                var read = await reposread.Get(13);
+                await repos.Create(new TakenBook
+                {
+                    DayOfReturn = null,
+                    FirstDayOfRent = new DateOnly(2024, 03, 20),
+                    LastDayOfRent = new DateOnly(2024, 07, 20),
+                    Book = book,
+                    Reader = read
+                });
+                unitOfWork.Save();
+            }
             //context.DocumentType.Add(new DocumentType { DocumentTypeName = "Passport" });
             //context.DocumentType.Add(new DocumentType { DocumentTypeName = "Student ticket" });
             //context.PublisherCodeType.Add(new PublisherCodeType { PublisherCodeName = "ISBN" });

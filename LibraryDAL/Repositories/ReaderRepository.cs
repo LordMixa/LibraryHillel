@@ -39,11 +39,23 @@ namespace LibraryDAL.Repositories
         }
         public async Task<IEnumerable<Reader>> GetAll()
         {
-            return await _readerSet.ToListAsync();
+            return await _readerSet.Include(r => r.TypeOfDocument)!.ToListAsync();
         }
         public async Task<IEnumerable<Reader>> GetAllTakenBook()
         {
-            return await _readerSet.Where(x => x.TakenBook != null).ToListAsync();
+            return await _readerSet
+                .Include(r => r.TakenBook)!
+                .ThenInclude(r => r.Book)
+                .Where(x => x.TakenBook != null)
+                .ToListAsync();
+        }
+        public async Task<Reader?> GetAllTakenBookByReader(string fname, string lname)
+        {
+            return await _readerSet
+                .Include(r => r.TakenBook)!
+                .ThenInclude(r => r.Book)
+                .ThenInclude(r => r.Authors)
+                .FirstOrDefaultAsync(x => x.LastName == lname && x.FirstName == fname);
         }
         public void Update(Reader item)
         {
