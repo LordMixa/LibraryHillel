@@ -12,6 +12,10 @@
         {
             return $"{FirstName} {LastName} {MiddleName}";
         }
+        public string ToStringId()
+        {
+            return $"{FirstName} {LastName} {MiddleName} Id: {AuthorId}";
+        }
         public string GetInfo()
         {
             string books = string.Join(", ", Books?.Select(x => x.Title) ?? new List<string>());

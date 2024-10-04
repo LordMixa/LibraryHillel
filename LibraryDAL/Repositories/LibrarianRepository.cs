@@ -16,7 +16,10 @@ namespace LibraryDAL.Repositories
         {
             await _librarianSet.AddAsync(item);
         }
-
+        public async Task<Librarian?> GetByLogPas(string login, string pass)
+        {
+            return await _librarianSet.FirstOrDefaultAsync(x => x.Login == login && x.Password == pass);
+        }
         public async Task Delete(int id)
         {
             Librarian? librarian = await _librarianSet.FindAsync(id);
@@ -37,6 +40,16 @@ namespace LibraryDAL.Repositories
         public void Update(Librarian item)
         {
             _librarianSet.Update(item);
+        }
+
+        public async Task<Librarian?> GetByLogin(string login)
+        {
+            return await _librarianSet.FirstOrDefaultAsync(x => x.Login == login);
+        }
+
+        public async Task<Librarian?> GetByEmail(string email)
+        {
+            return await _librarianSet.FirstOrDefaultAsync(x => x.Login == email);
         }
     }
 }

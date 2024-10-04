@@ -32,7 +32,7 @@ namespace LibraryDAL.Repositories
         {
             return await _takenBookSet.FirstOrDefaultAsync(x => x.Book.PublisherCode == code);
         }
-        public async Task<IEnumerable<TakenBook>>? GetDebtorList()
+        public async Task<IEnumerable<TakenBook>?> GetDebtorList()
         {
             return await _takenBookSet
                 .Include(tb => tb.Book)

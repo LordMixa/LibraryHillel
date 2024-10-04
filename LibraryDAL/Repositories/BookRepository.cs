@@ -53,10 +53,15 @@ namespace LibraryDAL.Repositories
         public async Task<List<Book>> GetFreeByAuthor(string fname, string lname)
         {
             return await _bookSet
-                .Include(e => e.TakenBook)
-                .Include(e => e.Authors)
-                .Where(e => (e.TakenBook == null || e.TakenBook.All(tb => tb.DayOfReturn != null))
-                        && (e.Authors != null && e.Authors.Any(a => a.FirstName == fname && a.LastName == lname)))
+                .Include(b => b.TakenBook)
+                .Include(b => b.Authors)
+                .Where(b =>
+                    b.TakenBook == null ||
+                    b.TakenBook.All(tb => tb.DayOfReturn != null) 
+                )
+                .Where(b =>
+                    b.Authors!.Any(a => a.FirstName == fname && a.LastName == lname)
+                )
                 .ToListAsync();
         }
         public async Task<Book?> GetByPublishCode(string code)

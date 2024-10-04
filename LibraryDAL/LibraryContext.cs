@@ -39,8 +39,17 @@ namespace LibraryDAL
             modelBuilder.Entity<Reader>()
                .HasIndex(e => e.Email)
                .IsUnique();
+            modelBuilder.Entity<Librarian>()
+                .HasIndex(e => e.Email)
+                .IsUnique();
             modelBuilder.Entity<Reader>()
                .HasIndex(e => e.DocumentNumber)
+               .IsUnique();
+            modelBuilder.Entity<Librarian>()
+               .HasIndex(e => e.Login)
+               .IsUnique();
+            modelBuilder.Entity<Reader>()
+               .HasIndex(e => e.Login)
                .IsUnique();
             modelBuilder.Entity<Book>()
               .HasIndex(e => e.PublisherCode)

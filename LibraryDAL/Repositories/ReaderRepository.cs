@@ -29,6 +29,10 @@ namespace LibraryDAL.Repositories
             if (reader != null)
                 _readerSet.Remove(reader);
         }
+        public async Task<Reader?> GetByDocument(string doc)
+        {
+            return await _readerSet.FirstOrDefaultAsync(e => e.DocumentNumber == doc);
+        }
         public async Task<Reader?> Get(int id)
         {
             return await _readerSet.FirstOrDefaultAsync(e => e.ReaderId==id);
@@ -36,6 +40,10 @@ namespace LibraryDAL.Repositories
         public async Task<Reader?> GetByName(string fname, string lname)
         {
             return await _readerSet.FirstOrDefaultAsync(x => x.LastName == lname && x.FirstName == fname);
+        }
+        public async Task<Reader?> GetByLogPas(string login, string pass)
+        {
+            return await _readerSet.FirstOrDefaultAsync(x => x.Login == login && x.Password == pass);
         }
         public async Task<IEnumerable<Reader>> GetAll()
         {
@@ -60,6 +68,16 @@ namespace LibraryDAL.Repositories
         public void Update(Reader item)
         {
             _readerSet.Update(item);
+        }
+
+        public async Task<Reader?> GetByLogin(string login)
+        {
+            return await _readerSet.FirstOrDefaultAsync(x => x.Login == login);
+        }
+
+        public async Task<Reader?> GetByEmail(string email)
+        {
+            return await _readerSet.FirstOrDefaultAsync(x => x.Login == email);
         }
     }
 }
