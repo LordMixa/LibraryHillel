@@ -1,10 +1,16 @@
-﻿namespace LibraryHillelEF
+﻿using LibraryDAL;
+using LibraryDAL.Entities;
+using LibraryDAL.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+namespace LibraryHillelEF
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            var menu = new ProgramMenu();
+            await menu.MainMenu();
         }
     }
 }
